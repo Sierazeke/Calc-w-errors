@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      body {
+        text-align: center;
+        background-color: rgb(30, 30, 30);
+      }
+      input {
+        color: rgb(220, 220, 220);
+        background-color: rgb(50, 50, 50);
+        font-weight: bold;
+        min-width: 22%;
+        height: 50%;
+      }
+      p {
+        color: rgb(128, 0, 128);
+        font-weight: bold;
+      }
+      .error {
+        color: darkred;
+      }
+    </style>
+    <div>
+      <input type="text" id="number1" /><br />
+      <input type="text" id="operator" /><br />
+      <input type="text" id="number2" /><br />
+      <button id="btn">Rēķināt</button><br />
+      <p id="output" class="error"></p>
+    </div>
+    <script>
+      let num1Input = document.getElementById("number1");
+      let operatorInput = document.getElementById("operator");
+      let num2Input = document.getElementById("number2");
+      let btn = document.getElementById("btn");
+      let output = document.querySelector("#output");
+
+      btn.addEventListener("click", handleClick);
+
+      function handleClick() {
+        let num1 = parseFloat(num1Input.value);
+        let num2 = parseFloat(num2Input.value);
+        let operator = operatorInput.value;
+
+        let errors = validateUserInput(num1, num2, operator);
+
+        let result = "";
+        if (errors.length === 0) {
+          result = "Rezultāts: " + calc(num1, num2, operator);
+          output.classList.toggle("error", false);
+        } else {
+          result = formatErrorList(errors);
+          output.classList.toggle("error", true);
+        }
+
+        displayResult(output, result);
+      }
+
+      function calc(n1, n2, op) {
+        switch (op) {
+          case "+":
+            return n1 + n2;
+          case "-":
+            return n1 - n2;
+          case "*":
+            return n1 * n2;
+          case "/":
+            return n1 / n2;
+          default:
+            return "Kļūdaina darbība";
+        }
+      }
+
+      function displayResult(outputElement, outputValue) {
+        outputElement.innerHTML = outputValue;
+      }
+
+      function validateUserInput(n1, n2, op) {
+        let errors = [];
+        if (isNaN(n1)) {
+          errors.push("Pirmais skaitlis nav ievadīts!");
+        }
+        if (!["+", "-", "*", "/"].includes(op)) {
+          errors.push("Kļūdains operators!");
+        }
+        if (isNaN(n2)) {
+          errors.push("Otrais skaitlis nav ievadīts!");
+        }
+
+        return errors;
+      }
+
+      function formatErrorList(errorArray) {
+        let htmlList = "<ul>";
+        for (let i = 0; i < errorArray.length; i++) {
+          htmlList += `<li>${errorArray[i]}</li>`;
+        }
+        htmlList += "</ul>";
+        return htmlList;
+      }
+    </script>
+  </body>
+</html>
